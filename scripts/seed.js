@@ -8,16 +8,17 @@ await db.sync ({force: true});
 console.log('Seeding database...');
 
 const moviesInDB = await Promise.all(
-    movieData.map(async(movie) => {
-    let releaseDate = Date.parse(movie.releaseDate)
+movieData.map((movie)=>{
+const releaseDate = new Date(Date.parse(movie.releaseDate));
+const {title, overview, posterPath} = movie;
 
     const newMovie = Movie.create({
-        title: movie.title,
-        overview: movie.overview,
-        posterPath: movie.posterPath,
-        releaseDate,
+        title: title,
+        overview: overview,
+        posterPath: posterPath,
+        releaseDate: releaseDate,
     });
-    return newMovie
+    return newMovie;
 })
 );
 
@@ -55,5 +56,6 @@ const ratingsInDB = await Promise.all(
 console.log(ratingsInDB);
 
 await db.close()
+console.log('Finished seeding database');
 
 
