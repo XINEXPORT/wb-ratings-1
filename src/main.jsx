@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
@@ -8,13 +9,33 @@ import {
 } from 'react-router-dom';
 import App from './App.jsx';
 import './css/index.css';
+import AllMoviesPage from './pages/AllMoviesPage.jsx';
 import ErrorPage from './pages/ErrorPage.jsx';
 import IndexPage from './pages/IndexPage.jsx';
+import MovieDetailPage from './pages/MovieDetailPage.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<ErrorPage />}>
       <Route index element={<IndexPage />} />
+
+      {/* All Movies */}
+      <Route
+      path="movies"
+      element={<AllMoviesPage />}
+      loader = {async () => {
+        const res = await axios.get('/api/movies');
+        return {movies: res.data};
+      }}
+      />
+      <Route
+      path = "movies/:movieId"
+      element={<MovieDetailPage/>}
+      loader={async({parmas}) => {
+        const res = await axios.get (`/api/movies/${params.movieId}`)
+        return {movie: res.data};
+      }}
+      />
     </Route>,
   ),
 );
